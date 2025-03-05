@@ -228,7 +228,7 @@ def to_flag(m: str) -> CondFlag:
     like Z or NEVER or might be a combination
     like PZ.
     """
-    if m in [ flag.name for flag in CondFlag ]:
+    if m in CondFlag.__members__ :
         return CondFlag[m]
     composite = CondFlag.NEVER
     for bitname in m:
@@ -272,8 +272,11 @@ def assemble(lines: list[str]) -> list[int]:
             fields = parse_line(line)
             if fields["kind"] == AsmSrcKind.FULL:
                 log.debug("Constructing instruction")
+
                 fill_defaults(fields)
+                log.debug("Defaults filled")
                 instr = instruction_from_dict(fields)
+                log.debug("Built instruction")
                 word = instr.encode()
                 instructions.append(word)
             elif fields["kind"] == AsmSrcKind.DATA:
